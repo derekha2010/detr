@@ -64,7 +64,7 @@ IoU metric: bbox
 ### DETR R50-DC5
 Train command line for training on single nodes:
 ```bash
-python main.py.py --dilation --lr_drop 400 --epochs 500 --coco_path data
+python main.py --dilation --lr_drop 400 --epochs 500 --coco_path data
 ```
 
 Eval command line:
