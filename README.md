@@ -28,6 +28,15 @@ unzip -q panoptic_train2017.zip
 unzip -q panoptic_val2017.zip
 rm -rf *.zip
 ```
+Expected directory structure:
+```
+data/
+  annotations/  # annotation json files
+  train2017/    # train images
+  val2017/      # val images
+  panoptic_train2017/    # train panoptic annotations
+  panoptic_val2017/      # val panoptic annotations
+```
 
 ## Object detection
 
@@ -93,7 +102,7 @@ IoU metric: bbox
 ```
 
 ### DETR R101
-Train command line for a single node training:
+Train command line for training on single nodes:
 ```bash
 python main.py --backbone resnet101 --lr_drop 400 --epochs 500 --coco_path data
 ```
@@ -124,7 +133,7 @@ IoU metric: bbox
 ```
 
 ### DETR R101-DC5
-Train command line for training on 8 nodes:
+Train command line for training on single nodes:
 ```bash
 python main.py --backbone resnet101 --dilation --lr_drop 400 --epochs 500 --coco_path data
 ```
