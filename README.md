@@ -8,7 +8,7 @@ pip install -r requirements.txt
 
 ## Quick trial
 ```bash
-python standalone-demo.py
+python standalone_demo.py
 ```
 
 ## Data preparation
