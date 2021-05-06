@@ -162,7 +162,7 @@ def run():
     detr.load_state_dict(state_dict)
     detr.eval();
 
-    url = 'http://images.cocodataset.org/val2017/000000039769.jpg'
+    url = 'http://images.cocodataset.org/val2017/000000051008.jpg'
     im = Image.open(requests.get(url, stream=True).raw)
     
     scores, boxes = detect(im, detr)
