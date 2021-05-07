@@ -24,32 +24,32 @@ class DETR(nn.Module):
                  num_encoder_layers=6, num_decoder_layers=6):
         super().__init__()
 
-        # create ResNet-50 backbone
+        # 1. create ResNet-50 backbone
         self.backbone = resnet50()
         del self.backbone.fc
 
-        # create conversion layer
+        # 2. create conversion layer
         self.conv = nn.Conv2d(2048, hidden_dim, 1)
 
-        # create a default PyTorch transformer
-        self.transformer = nn.Transformer(
-            hidden_dim, nheads, num_encoder_layers, num_decoder_layers)
-
-        # prediction heads, one extra class for predicting non-empty slots
-        # note that in baseline DETR linear_bbox layer is 3-layer MLP
-        self.linear_class = nn.Linear(hidden_dim, num_classes + 1)
-        self.linear_bbox = nn.Linear(hidden_dim, 4)
-
-        # output positional encodings (object queries)
-        self.query_pos = nn.Parameter(torch.rand(100, hidden_dim))
-
-        # spatial positional encodings
+        # 3. spatial positional encodings
         # note that in baseline DETR we use sine positional encodings
         self.row_embed = nn.Parameter(torch.rand(50, hidden_dim // 2))
         self.col_embed = nn.Parameter(torch.rand(50, hidden_dim // 2))
 
+        # 4. create a default PyTorch transformer
+        self.transformer = nn.Transformer(
+            hidden_dim, nheads, num_encoder_layers, num_decoder_layers)
+
+        # 5. output positional encodings (object queries)
+        self.query_pos = nn.Parameter(torch.rand(100, hidden_dim))
+
+        # 6. prediction heads, one extra class for predicting non-empty slots
+        # note that in baseline DETR linear_bbox layer is 3-layer MLP
+        self.linear_class = nn.Linear(hidden_dim, num_classes + 1)
+        self.linear_bbox = nn.Linear(hidden_dim, 4)
+
     def forward(self, inputs):
-        # propagate inputs through ResNet-50 up to avg-pool layer
+        # 1. propagate inputs through ResNet-50 up to avg-pool layer
         x = self.backbone.conv1(inputs)
         x = self.backbone.bn1(x)
         x = self.backbone.relu(x)
@@ -60,10 +60,10 @@ class DETR(nn.Module):
         x = self.backbone.layer3(x)
         x = self.backbone.layer4(x)
 
-        # convert from 2048 to 256 feature planes for the transformer
+        # 2. convert from 2048 to 256 feature planes for the transformer
         h = self.conv(x)
 
-        # construct positional encodings
+        # 3. construct positional encodings
         H, W = h.shape[-2:]
         pos = torch.cat([
             self.col_embed[:W].unsqueeze(0).repeat(H, 1, 1),
@@ -71,10 +71,11 @@ class DETR(nn.Module):
         ], dim=-1).flatten(0, 1).unsqueeze(1)
 
         # propagate through the transformer
+        # 2 + 3 -> 4 <- 5
         h = self.transformer(pos + 0.1 * h.flatten(2).permute(2, 0, 1),
                              self.query_pos.unsqueeze(1)).transpose(0, 1)
         
-        # finally project transformer outputs to class labels and bounding boxes
+        # 6. finally project transformer outputs to class labels and bounding boxes
         return {'pred_logits': self.linear_class(h), 
                 'pred_boxes': self.linear_bbox(h).sigmoid()}
 

@@ -73,12 +73,12 @@ IoU metric: bbox
 ### DETR R50-DC5
 Train command line for training on single nodes:
 ```bash
-python main.py --dilation --lr_drop 400 --epochs 500 --coco_path data
+python main.py --dilation --lr_drop 400 --epochs 500 --batch_size 1 --coco_path data
 ```
 
 Eval command line:
 ```
-python main.py --no_aux_loss --eval \
+python main.py --no_aux_loss --eval --batch_size 1 \
     --dilation \
     --resume https://dl.fbaipublicfiles.com/detr/detr-r50-dc5-f0fb7ef5.pth \
     --coco_path data
@@ -135,12 +135,12 @@ IoU metric: bbox
 ### DETR R101-DC5
 Train command line for training on single nodes:
 ```bash
-python main.py --backbone resnet101 --dilation --lr_drop 400 --epochs 500 --coco_path data
+python main.py --backbone resnet101 --dilation --lr_drop 400 --epochs 500 --batch_size 1 --coco_path data
 ```
 
 Eval command line:
 ```
-python main.py --no_aux_loss --eval \
+python main.py --no_aux_loss --eval --batch_size 1 \
     --backbone resnet101 --dilation \
     --resume https://dl.fbaipublicfiles.com/detr/detr-r101-dc5-a2e86def.pth \
     --coco_path data
@@ -167,7 +167,7 @@ IoU metric: bbox
 ### DETR R50
 Eval command line:
 ```
-python main.py --no_aux_loss --eval \
+python main.py --no_aux_loss --eval --batch_size 1 \
     --masks \
     --resume https://dl.fbaipublicfiles.com/detr/detr-r50-panoptic-00ce5173.pth \
     --dataset_file coco_panoptic \
@@ -215,7 +215,7 @@ Stuff     |  36.3   78.5   45.3    53
 ### DETR-R50 DC5
 Eval command line:
 ```
-python main.py --no_aux_loss --eval \
+python main.py --no_aux_loss --eval --batch_size 1 \
     --masks --dilation \
     --resume https://dl.fbaipublicfiles.com/detr/detr-r50-dc5-panoptic-da08f1b1.pth \
     --dataset_file coco_panoptic \
@@ -262,7 +262,7 @@ Stuff     |  37.3   78.7   46.5    53
 ### DETR-R101
 Eval command line:
 ```
-python main.py --no_aux_loss --eval \
+python main.py --no_aux_loss --eval --batch_size 1 \
     --masks --backbone resnet101 \
     --resume https://dl.fbaipublicfiles.com/detr/detr-r101-panoptic-40021d53.pth \
     --dataset_file coco_panoptic \
